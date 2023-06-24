@@ -15,7 +15,7 @@ dependencies = [
 
 [[package]]
 name = "async-watcher"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-trait",
  "notify",
@@ -70,7 +70,7 @@ dependencies = [
 
 [[package]]
 name = "example-rebuild"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-watcher",
  "tokio",
@@ -78,7 +78,7 @@ dependencies = [
 
 [[package]]
 name = "example-simple"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-watcher",
  "tokio",
