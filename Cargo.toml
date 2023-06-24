@@ -1,14 +1,14 @@
 [workspace]
 members = ["crates/*", "examples/*"]
 resolver = "2"
-license = "MIT"
-homepage = "https://github.com/justinrubek/async-watcher"
-repository = "https://github.com/justinrubek/async-watcher"
-authors = ["Justin Rubek"]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+homepage = "https://github.com/justinrubek/async-watcher"
+repository = "https://github.com/justinrubek/async-watcher"
+authors = ["Justin Rubek"]
 
 [workspace.dependencies]
 notify = "5.1.0"

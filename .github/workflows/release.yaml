@@ -8,6 +8,8 @@ jobs:
   publish-github:
     name: publish to github releases
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: checkout
