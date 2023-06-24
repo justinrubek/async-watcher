@@ -1,0 +1,12 @@
+[package]
+name = "async-watcher"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+async-trait = "0.1.68"
+serde = { workspace = true }
+tokio = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+notify = { workspace = true }
