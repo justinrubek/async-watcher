@@ -69,6 +69,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-simple"
+version = "0.1.0"
+dependencies = [
+ "async-watcher",
+ "tokio",
+]
+
+[[package]]
 name = "filetime"
 version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
