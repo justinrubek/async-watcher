@@ -15,7 +15,7 @@ dependencies = [
 
 [[package]]
 name = "async-watcher"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "async-trait",
  "notify",
@@ -70,7 +70,7 @@ dependencies = [
 
 [[package]]
 name = "example-channel"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "async-watcher",
  "tokio",
@@ -78,7 +78,7 @@ dependencies = [
 
 [[package]]
 name = "example-rebuild"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "async-watcher",
  "tokio",
@@ -86,7 +86,7 @@ dependencies = [
 
 [[package]]
 name = "example-simple"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "async-watcher",
  "tokio",
