@@ -246,6 +246,27 @@ impl<T: Watcher> AsyncDebouncer<T> {
 
         Ok(guard)
     }
+
+    /// Creates a new debounced watcher with custom configuration.
+    /// The timeout specifies the amount of time that must elapse before an event is emitted, or a
+    /// continuous event is sent (if there still are events incoming for the specific path).
+    /// If tick_rate is set to None, then a tick rate will be selected that is less than the provided timeout.
+    /// A handle to the debouncer is returned alongside a channel that can be used to receive events.
+    pub async fn new_with_channel_and_opts<F: AsyncDebounceEventHandler + Send + 'static>(
+        timeout: Duration,
+        tick_rate: Option<Duration>,
+        config: notify::Config,
+    ) -> Result<
+        (
+            Self,
+            tokio::sync::mpsc::Receiver<Result<Vec<DebouncedEvent>, Vec<NotifyError>>>,
+        ),
+        Error,
+    > {
+        let (tx, rx) = tokio::sync::mpsc::channel(1);
+        let debouncer = Self::new_with_opts(timeout, tick_rate, tx, config).await?;
+        Ok((debouncer, rx))
+    }
 }
 
 impl AsyncDebouncer<RecommendedWatcher> {
@@ -260,5 +281,26 @@ impl AsyncDebouncer<RecommendedWatcher> {
     ) -> Result<Self, Error> {
         AsyncDebouncer::new_with_opts(timeout, tick_rate, event_handler, notify::Config::default())
             .await
+    }
+
+    /// Creates a new debounced watcher with the recommended watcher implementation.
+    /// The timeout specifies the amount of time that must elapse before an event is emitted, or a
+    /// continuous event is sent (if there still are events incoming for the specific path).
+    /// If tick_rate is set to None, then a tick rate will be selected that is less than the provided timeout.
+    /// A handle to the debouncer is returned alongside a channel that can be used to receive events.
+    pub async fn new_with_channel(
+        timeout: Duration,
+        tick_rate: Option<Duration>,
+    ) -> Result<
+        (
+            Self,
+            tokio::sync::mpsc::Receiver<Result<Vec<DebouncedEvent>, Vec<NotifyError>>>,
+        ),
+        Error,
+    > {
+        AsyncDebouncer::new_with_channel_and_opts::<
+            tokio::sync::mpsc::Sender<Result<Vec<DebouncedEvent>, Vec<NotifyError>>>,
+        >(timeout, tick_rate, notify::Config::default())
+        .await
     }
 }
