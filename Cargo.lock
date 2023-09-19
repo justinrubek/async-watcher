@@ -69,6 +69,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "example-channel"
+version = "0.1.1"
+dependencies = [
+ "async-watcher",
+ "tokio",
+]
+
+[[package]]
 name = "example-rebuild"
 version = "0.1.1"
 dependencies = [
