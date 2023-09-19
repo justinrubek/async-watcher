@@ -1,0 +1,8 @@
+[package]
+name = "example-channel"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+async-watcher = { path = "../../crates/watcher" }
+tokio = { workspace = true }
