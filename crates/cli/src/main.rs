@@ -1,4 +1,3 @@
-#![feature(async_closure)]
 use crate::error::Result;
 use async_walkdir::WalkDir;
 use async_watcher::{notify::RecursiveMode, AsyncDebouncer};
