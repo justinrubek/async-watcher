@@ -1,0 +1,29 @@
+[package]
+name = "awatch"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+readme = { workspace = true }
+homepage = { workspace = true }
+authors = { workspace = true }
+
+[dependencies]
+async-walkdir = "1.0.0"
+async-watcher = { path = "../watcher" }
+globset = "0.4"
+thiserror.workspace = true
+tokio-stream = { version = "0.1.15", features = ["fs"] }
+tracing-subscriber = "0.3.16"
+
+[dependencies.clap]
+version = "4.5"
+features = ["derive"]
+
+[dependencies.tokio]
+features = []
+workspace = true
+
+[dependencies.tracing]
+features = []
+workspace = true
