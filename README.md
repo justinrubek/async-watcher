@@ -14,3 +14,15 @@ Notify takes care of all of the work, but the debouncing traits weren't async.
 `async-watcher` leverages [async-trait](https://github.com/dtolnay/async-trait) to provide an async interface for creating watchers.
 
 See the [examples](./examples) for usage.
+
+## cli
+
+Included is a command line application that can be used to execute a command when notified of changes.
+The files to watch are specified with a glob pattern as the first argument.
+Subsequent arguments are the command to run and its arguments.
+The program is exposed as a nix flake package called `awatch`.
+
+example usage:
+```sh
+awatch './{crates,Cargo.toml,Cargo.lock}' echo "crates modified"
+```
