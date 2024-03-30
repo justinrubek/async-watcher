@@ -8,7 +8,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .await?;
 
     // register the paths to be watched
-    let paths = vec!["Cargo.toml", "Cargo.lock", "crates", "examples"];
+    let paths = ["Cargo.toml", "Cargo.lock", "crates", "examples"];
     paths.iter().for_each(|p| {
         debouncer
             .watcher()
