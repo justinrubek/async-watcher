@@ -79,8 +79,17 @@ async fn main() -> Result<()> {
                 }
             }
             result = &mut task => {
-                info!(?result, "command exited");
+                debug!(?result, "command exited");
                 result??;
+                // spawn a new task so that subsequent iterations of the loop won't panic.
+                // for commands that don't exit, e.g. a webserver, this won't happen,
+                // but for commands that do exit, e.g. a build tool, this will ensure the
+                // command only runs once each time events are received.
+                let cloned_token = token.clone();
+                task = tokio::spawn(async move {
+                    cloned_token.cancelled().await;
+                    Ok(())
+                });
             }
         }
     }
