@@ -4,8 +4,9 @@ use async_walkdir::WalkDir;
 use async_watcher::{notify::RecursiveMode, AsyncDebouncer};
 use clap::Parser;
 use globset::{Glob, GlobSetBuilder};
-use std::{process::ExitStatus, time::Duration};
+use std::time::Duration;
 use tokio_stream::StreamExt;
+use tokio_util::sync::CancellationToken;
 use tracing::{debug, info};
 
 pub mod commands;
@@ -51,7 +52,12 @@ async fn main() -> Result<()> {
             .unwrap();
     });
 
-    let mut task = tokio::spawn(run_command(args.command.clone(), args.args.clone()));
+    let mut token = CancellationToken::new();
+    let mut task = tokio::spawn(run_command(
+        args.command.clone(),
+        args.args.clone(),
+        token.clone(),
+    ));
 
     loop {
         tokio::select! {
@@ -60,8 +66,11 @@ async fn main() -> Result<()> {
                     Some(events) => {
                         info!(?events, "file changed, restarting command");
 
-                        task.abort();
-                        task = tokio::spawn(run_command(args.command.clone(), args.args.clone()));
+                        token.cancel();
+                        task.await?.unwrap();
+
+                        token = CancellationToken::new();
+                        task = tokio::spawn(run_command(args.command.clone(), args.args.clone(), token.clone()));
                     }
                     None => {
                         tracing::error!("file watcher channel closed, exiting");
@@ -79,8 +88,11 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-async fn run_command(command: String, args: Vec<String>) -> Result<ExitStatus> {
-    let mut task = tokio::process::Command::new(command).args(args).spawn()?;
-    let result = task.wait().await?;
-    Ok(result)
+async fn run_command(command: String, args: Vec<String>, token: CancellationToken) -> Result<()> {
+    let mut child = tokio::process::Command::new(command).args(args).spawn()?;
+    tokio::select! {
+        _ = token.cancelled() => child.kill().await?,
+        _ = child.wait() => {}
+    }
+    Ok(())
 }

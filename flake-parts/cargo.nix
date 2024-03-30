@@ -26,25 +26,33 @@
         ];
       };
 
-      # TODO: change the name to reflect the project
-      pname = "rust-crane";
+      pname = "async-watch";
 
       nativeBuildInputs = withExtraPackages [];
       LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath nativeBuildInputs;
     };
 
-    deps-only = craneLib.buildDepsOnly ({} // common-build-args);
+    cargoArtifacts = craneLib.buildDepsOnly ({} // common-build-args);
 
     packages = {
+      default = packages.awatch;
+      awatch = craneLib.buildPackage ({
+          pname = "awatch";
+          inherit cargoArtifacts;
+          cargoExtraArgs = "--bin awatch";
+          meta.mainProgram = "awatch";
+        }
+        // common-build-args);
+
       cargo-doc = craneLib.cargoDoc ({
-          cargoArtifacts = deps-only;
+          inherit cargoArtifacts;
         }
         // common-build-args);
     };
 
     checks = {
       clippy = craneLib.cargoClippy ({
-          cargoArtifacts = deps-only;
+          cargoArtifacts = cargoArtifacts;
           cargoClippyExtraArgs = "--all-features -- --deny warnings";
         }
         // common-build-args);
@@ -55,7 +63,7 @@
         // common-build-args);
 
       rust-tests = craneLib.cargoNextest ({
-          cargoArtifacts = deps-only;
+          cargoArtifacts = cargoArtifacts;
           partitions = 1;
           partitionType = "count";
         }
