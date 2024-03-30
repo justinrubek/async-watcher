@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.2.1](https://github.com/justinrubek/async-watcher/compare/5ad94fea49d19cf12c5fc19aeedfe4ba5d55ab2f..0.2.1) - 2024-03-30
+#### Bug Fixes
+- **(cli)** support commands that exit - ([00056f2](https://github.com/justinrubek/async-watcher/commit/00056f2cc88535c96ecc306e57322ab25268223d)) - [@justinrubek](https://github.com/justinrubek)
+#### Build system
+- **(cargo)** cargo update - ([1e468a0](https://github.com/justinrubek/async-watcher/commit/1e468a058194572776c5e7f211e49287dd76a9d2)) - [@justinrubek](https://github.com/justinrubek)
+- **(nix)** add `awatch` package - ([df17dff](https://github.com/justinrubek/async-watcher/commit/df17dff798e6a47db9938420e7bf207fd65b4318)) - [@justinrubek](https://github.com/justinrubek)
+- **(nix)** nix flake update - ([60f5819](https://github.com/justinrubek/async-watcher/commit/60f58198a6f69d69623a4a48c6114dc3634ad308)) - [@justinrubek](https://github.com/justinrubek)
+#### Documentation
+- **(readme)** add cli information - ([251d1ef](https://github.com/justinrubek/async-watcher/commit/251d1ef27880aa8ed8f79fb6caaf8a96b5f8d7f9)) - [@justinrubek](https://github.com/justinrubek)
+#### Features
+- add `awatch` cli - ([a6469d2](https://github.com/justinrubek/async-watcher/commit/a6469d2da459bf22f57f33d955bd6bf0864b3b1e)) - [@justinrubek](https://github.com/justinrubek)
+#### Refactoring
+- **(examples)** remove useless vec usage - ([5ad94fe](https://github.com/justinrubek/async-watcher/commit/5ad94fea49d19cf12c5fc19aeedfe4ba5d55ab2f)) - [@justinrubek](https://github.com/justinrubek)
+
+- - -
+
 ## [0.2.0](https://github.com/justinrubek/async-watcher/compare/0.1.1..0.2.0) - 2023-09-19
 #### Documentation
 - **(example)** add channel example - ([17fba9f](https://github.com/justinrubek/async-watcher/commit/17fba9fc5f8dd9481b82336306c3292c37bf50ee)) - [@justinrubek](https://github.com/justinrubek)
