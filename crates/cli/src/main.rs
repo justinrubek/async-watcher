@@ -5,7 +5,6 @@ use clap::Parser;
 use globset::{Glob, GlobSetBuilder};
 use std::time::Duration;
 use tokio_stream::StreamExt;
-use tokio_util::sync::CancellationToken;
 use tracing::{debug, info};
 
 pub mod commands;
@@ -51,56 +50,34 @@ async fn main() -> Result<()> {
             .unwrap();
     });
 
-    let mut token = CancellationToken::new();
-    let mut task = tokio::spawn(run_command(
-        args.command.clone(),
-        args.args.clone(),
-        token.clone(),
-    ));
+    let mut build_process = tokio::process::Command::new(&args.command)
+        .args(&args.args)
+        .spawn()
+        .ok();
 
-    loop {
-        tokio::select! {
-            events = file_events.recv() => {
-                match events {
-                    Some(events) => {
-                        info!(?events, "file changed, restarting command");
+    while let Some(event) = file_events.recv().await {
+        match event {
+            Ok(events) => {
+                info!(?events, "detected changes, restarting command");
 
-                        token.cancel();
-                        task.await?.unwrap();
-
-                        token = CancellationToken::new();
-                        task = tokio::spawn(run_command(args.command.clone(), args.args.clone(), token.clone()));
-                    }
-                    None => {
-                        tracing::error!("file watcher channel closed, exiting");
-                        break;
-                    }
+                if let Some(ref mut child) = build_process {
+                    child.kill().await.expect("failed to kill child process");
                 }
+
+                let process = tokio::process::Command::new(&args.command)
+                    .args(&args.args)
+                    .spawn()
+                    .expect("failed to spawn child process");
+
+                build_process = Some(process);
             }
-            result = &mut task => {
-                debug!(?result, "command exited");
-                result??;
-                // spawn a new task so that subsequent iterations of the loop won't panic.
-                // for commands that don't exit, e.g. a webserver, this won't happen,
-                // but for commands that do exit, e.g. a build tool, this will ensure the
-                // command only runs once each time events are received.
-                let cloned_token = token.clone();
-                task = tokio::spawn(async move {
-                    cloned_token.cancelled().await;
-                    Ok(())
-                });
+            Err(errors) => {
+                for error in errors {
+                    tracing::error!(?error, "error watching file");
+                }
             }
         }
     }
 
-    Ok(())
-}
-
-async fn run_command(command: String, args: Vec<String>, token: CancellationToken) -> Result<()> {
-    let mut child = tokio::process::Command::new(command).args(args).spawn()?;
-    tokio::select! {
-        _ = token.cancelled() => child.kill().await?,
-        _ = child.wait() => {}
-    }
     Ok(())
 }
