@@ -50,10 +50,15 @@ async fn main() -> Result<()> {
             .unwrap();
     });
 
-    let mut build_process = tokio::process::Command::new(&args.command)
-        .args(&args.args)
-        .spawn()
-        .ok();
+    let mut build_process = match args.skip_launch_on_startup {
+        true => None,
+        false => Some(
+            tokio::process::Command::new(&args.command)
+                .args(&args.args)
+                .spawn()
+                .expect("failed to spawn child process"),
+        ),
+    };
 
     while let Some(event) = file_events.recv().await {
         match event {
