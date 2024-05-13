@@ -1,4 +1,7 @@
-use async_watcher::{notify::RecursiveMode, AsyncDebouncer};
+use async_watcher::{
+    notify::{EventKind, RecursiveMode},
+    AsyncDebouncer,
+};
 use std::time::Duration;
 
 #[tokio::main]
@@ -18,9 +21,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
     // wait for events
-    while let Some(event) = file_events.recv().await {
-        println!("event: {:?}", event);
+    while let Some(Ok(events)) = file_events.recv().await {
+        events.iter().for_each(|e| display_event(&e.event));
     }
 
     Ok(())
+}
+
+fn display_event(event: &async_watcher::notify::Event) {
+    let action = match event.kind {
+        EventKind::Access(_) => "accessed",
+        EventKind::Any => "any",
+        EventKind::Create(_) => "created",
+        EventKind::Modify(_) => "modified",
+        EventKind::Other => "other",
+        EventKind::Remove(_) => "removed",
+    };
+    println!("{}: {:?}", action, event.paths);
 }
