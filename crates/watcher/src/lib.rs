@@ -1,5 +1,4 @@
 use crate::error::Error;
-use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     path::PathBuf,
@@ -34,7 +33,7 @@ impl EventData {
 }
 
 /// The types of events that can be debounced.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 #[non_exhaustive]
 pub enum DebouncedEventKind {
     /// No precise events
@@ -53,11 +52,19 @@ pub struct DebouncedEvent {
     pub path: PathBuf,
     /// Event kind
     pub kind: DebouncedEventKind,
+    /// Base event from notify
+    pub event: Event,
 }
 
 impl DebouncedEvent {
-    fn new(path: PathBuf, kind: DebouncedEventKind) -> Self {
-        Self { path, kind }
+    fn new(path: PathBuf, kind: DebouncedEventKind, event: Event) -> Self {
+        Self { path, kind, event }
+    }
+}
+
+impl AsRef<Event> for DebouncedEvent {
+    fn as_ref(&self) -> &Event {
+        &self.event
     }
 }
 
@@ -65,7 +72,7 @@ type DebounceData = Arc<Mutex<DebounceDataInner>>;
 
 #[derive(Default)]
 struct DebounceDataInner {
-    d: HashMap<PathBuf, EventData>,
+    d: HashMap<PathBuf, (Event, EventData)>,
     timeout: Duration,
     e: Vec<NotifyError>,
 }
@@ -77,14 +84,14 @@ impl DebounceDataInner {
         let mut data_back = HashMap::with_capacity(self.d.len());
 
         // TODO: drain_filter https://github.com/rust-lang/rust/issues/59618
-        for (k, v) in self.d.drain() {
+        for (k, (e, v)) in self.d.drain() {
             if v.update.elapsed() >= self.timeout {
-                events_expired.push(DebouncedEvent::new(k, DebouncedEventKind::Any));
+                events_expired.push(DebouncedEvent::new(k, DebouncedEventKind::Any, e));
             } else if v.insert.elapsed() >= self.timeout {
-                data_back.insert(k.clone(), v);
-                events_expired.push(DebouncedEvent::new(k, DebouncedEventKind::AnyContinuous));
+                data_back.insert(k.clone(), (e.clone(), v));
+                events_expired.push(DebouncedEvent::new(k, DebouncedEventKind::AnyContinuous, e));
             } else {
-                data_back.insert(k, v);
+                data_back.insert(k, (e, v));
             }
         }
 
@@ -104,11 +111,11 @@ impl DebounceDataInner {
 
     /// Add new event to debouncer cache
     pub fn add_event(&mut self, e: Event) {
-        for path in e.paths.into_iter() {
-            if let Some(v) = self.d.get_mut(&path) {
+        for path in e.paths.clone().into_iter() {
+            if let Some((_, v)) = self.d.get_mut(&path) {
                 v.update = Instant::now();
             } else {
-                self.d.insert(path, EventData::new_any());
+                self.d.insert(path, (e.clone(), EventData::new_any()));
             }
         }
     }
