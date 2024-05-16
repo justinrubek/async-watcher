@@ -14,7 +14,7 @@
 
     packages = {
       cocogitto = pkgs.cocogitto;
-      bomper = inputs'.bomper.packages.cli;
+      bomper = config.bomper.wrappedBomper;
     };
 
     devShells = {
