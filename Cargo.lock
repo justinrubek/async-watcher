@@ -138,7 +138,7 @@ dependencies = [
 
 [[package]]
 name = "async-watcher"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "async-trait",
  "notify",
@@ -162,7 +162,7 @@ checksum = "0c4b4d0bd25bd0b74681c0ad21497610ce1b7c91b1022cd21c80c6fbdd9476b0"
 
 [[package]]
 name = "awatch"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "async-walkdir",
  "async-watcher",
@@ -358,7 +358,7 @@ dependencies = [
 
 [[package]]
 name = "example-channel"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "async-watcher",
  "tokio",
@@ -366,7 +366,7 @@ dependencies = [
 
 [[package]]
 name = "example-rebuild"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "async-watcher",
  "tokio",
@@ -374,7 +374,7 @@ dependencies = [
 
 [[package]]
 name = "example-simple"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "async-watcher",
  "tokio",
