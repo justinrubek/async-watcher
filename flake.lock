@@ -12,11 +12,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1715906916,
-        "narHash": "sha256-P3xUq4/14JjGOGlfAP/TN+l14KAcu/wmu6uDNS0J9/0=",
+        "lastModified": 1715909022,
+        "narHash": "sha256-ObIpa5HMesCPK2O+lcHOkbskbwdPt72Ii1BRbpIS5Wk=",
         "owner": "justinrubek",
         "repo": "bomper",
-        "rev": "cfb70db4f13c46f1168b05ecbac144e43c09b797",
+        "rev": "30b55aa1e7e1dc00b70e5afd410e65b8fb6ac392",
         "type": "github"
       },
       "original": {
