@@ -8,12 +8,10 @@
     ...
   }: let
     ciPackages = [
-      self'.packages.cocogitto
       self'.packages.bomper
     ];
 
     packages = {
-      cocogitto = pkgs.cocogitto;
       bomper = config.bomper.wrappedBomper;
     };
 
