@@ -46,7 +46,6 @@ pub enum DebouncedEventKind {
 ///
 /// Does not emit any specific event type on purpose, only distinguishes between an any event and a continuous any event.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DebouncedEvent {
     /// Event path
     pub path: PathBuf,
