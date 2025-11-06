@@ -199,7 +199,7 @@ impl<T: Watcher> AsyncDebouncer<T> {
             }
             None => timeout
                 .checked_div(tick_div)
-                .ok_or_else(|| Error::FailedToCalculateTick(timeout, tick_div))?,
+                .ok_or(Error::FailedToCalculateTick(timeout, tick_div))?,
         };
 
         {
