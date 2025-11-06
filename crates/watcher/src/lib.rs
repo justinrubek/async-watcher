@@ -258,7 +258,7 @@ impl<T: Watcher> AsyncDebouncer<T> {
     /// continuous event is sent (if there still are events incoming for the specific path).
     /// If tick_rate is set to None, then a tick rate will be selected that is less than the provided timeout.
     /// A handle to the debouncer is returned alongside a channel that can be used to receive events.
-    pub async fn new_with_channel_and_opts<F: AsyncDebounceEventHandler + Send + 'static>(
+    pub async fn new_with_channel_and_opts(
         timeout: Duration,
         tick_rate: Option<Duration>,
         config: notify::Config,
@@ -304,9 +304,7 @@ impl AsyncDebouncer<RecommendedWatcher> {
         ),
         Error,
     > {
-        AsyncDebouncer::new_with_channel_and_opts::<
-            tokio::sync::mpsc::Sender<Result<Vec<DebouncedEvent>, Vec<NotifyError>>>,
-        >(timeout, tick_rate, notify::Config::default())
+        AsyncDebouncer::new_with_channel_and_opts(timeout, tick_rate, notify::Config::default())
         .await
     }
 }
