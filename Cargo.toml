@@ -12,9 +12,9 @@ repository = "https://github.com/justinrubek/async-watcher"
 version = "0.3.0"
 
 [workspace.dependencies]
-notify = "5.1.0"
+notify = "8.2.0"
 serde_json = "1.0.87"
-thiserror = "1.0.38"
+thiserror = "2.0.17"
 tracing = "0.1.37"
 
 [workspace.dependencies.serde]
