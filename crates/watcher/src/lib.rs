@@ -305,6 +305,6 @@ impl AsyncDebouncer<RecommendedWatcher> {
         Error,
     > {
         AsyncDebouncer::new_with_channel_and_opts(timeout, tick_rate, notify::Config::default())
-        .await
+            .await
     }
 }
